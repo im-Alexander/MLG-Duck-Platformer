@@ -10,19 +10,42 @@ public class PlayerBehavior : MonoBehaviour
 	private float _jump;
 	private bool _isFacingRight;
 	private bool _isGrounded;
+	private Transform firePos;
+	private Game_Controller controller;
 
 	//public instance variables
+	[Header ("Player Mechanics")]
 	public float Velocity = 10f;
 	public float AirVelocity = 5f;
 	public float JumpForce = 100f;
+	public int HP = 5;
+
+	[Header ("Camera")]
 	public Camera camera;
+
+	[Header ("Spawning")]
 	public Transform SpawnPoint;
+
+	[Header ("Animation and sound")]
 	public Animator anim;
+	public AudioClip JumpSound;
+	public AudioClip LaserFire;
+	public AudioClip DeathSound;
+
+	[Header ("Laser")]
+	public GameObject DuckLaserLeft; 
+	public GameObject DuckLaserRight;
 
 	// Use this for initialization
 	void Start () 
 	{
 		this._initalize();
+
+		//To link to the game controller
+		controller = GameObject.FindGameObjectWithTag ("GameController").GetComponent <Game_Controller>();
+
+		//To Update the interface when the game starts
+		controller.DecreaseHP(0);
 	}
 	
 	// Update is called once per frame (physics)
@@ -58,10 +81,12 @@ public class PlayerBehavior : MonoBehaviour
 			if(Input.GetKeyDown(KeyCode.Z))
 			{
 				this._jump = 1f;
+				GetComponent<AudioSource>().PlayOneShot(JumpSound);
 			}
 			if(Input.GetKeyDown(KeyCode.Comma))
 			{
 				this._jump = 1f;
+				GetComponent<AudioSource>().PlayOneShot(JumpSound);
 			}
 
 			this._rigidbody.AddForce(new Vector2(this._move * this.Velocity, this._jump * this.JumpForce), ForceMode2D.Force);
@@ -92,7 +117,17 @@ public class PlayerBehavior : MonoBehaviour
 
 		this.camera.transform.position = new Vector3(this._transform.position.x, this._transform.position.y, -10f);
 
+		if (Input.GetKeyDown (KeyCode.Period)) 
+		{
+			GetComponent<AudioSource> ().PlayOneShot (LaserFire);
+			Fire ();
+		}
 
+		if (Input.GetKeyDown (KeyCode.X)) 
+		{
+			GetComponent<AudioSource> ().PlayOneShot (LaserFire);
+			Fire ();
+		}
 	}
 
 	//Private Functions
@@ -106,6 +141,10 @@ public class PlayerBehavior : MonoBehaviour
 
 		//For animation
 		this.anim = GetComponent<Animator> ();
+
+		//For fire Position - finds the fire position
+		this.firePos = transform.FindChild("FirePos");
+
 	}
 
 	private void _flip() 
@@ -122,9 +161,28 @@ public class PlayerBehavior : MonoBehaviour
 
 	private void OnCollisionEnter2D(Collision2D other)
 	{
+		// This if statement is to -> die -> Play the death sound -> respawn -> reset the user interface when a death barrier has been hit.
 		if (other.gameObject.CompareTag ("Death"))
 		{
+			controller.DecreaseHP(5);
+			GetComponent<AudioSource> ().PlayOneShot (DeathSound);
 			this._transform.position = this.SpawnPoint.position;
+			HP = 5;
+			controller.DecreaseHP(0);
+		}
+
+		if (other.gameObject.CompareTag ("Enemy")) 
+		{
+			HP--;
+			controller.DecreaseHP(1);
+			if (HP <= 0) 
+			{
+				this._transform.position = this.SpawnPoint.position;
+				HP = 5;
+				//To reset interface on respawn
+				controller.DecreaseHP(0);
+				GetComponent<AudioSource> ().PlayOneShot (DeathSound);
+			}
 		}
 	}
 
@@ -139,5 +197,26 @@ public class PlayerBehavior : MonoBehaviour
 	private void OnCollisionExit2D(Collision2D other)
 	{
 		this._isGrounded = false;
+	}
+
+	private void OnTriggerEnter2D(Collider2D other)
+	{
+		if (other.gameObject.CompareTag ("PowerUp")) 
+		{
+			if (HP < 5) 
+			{
+				HP++;
+				controller.DecreaseHP(-1);
+			}
+		}
+	}
+
+	private void Fire()
+	{
+		if (_isFacingRight)
+			Instantiate (DuckLaserRight, firePos.position, Quaternion.identity);
+		
+		if (!_isFacingRight)
+			Instantiate (DuckLaserLeft, firePos.position, Quaternion.identity);
 	}
 }

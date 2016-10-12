@@ -45,8 +45,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\_Scripts\Enemy_Behavior.cs" />
+     <Compile Include="Assets\_Scripts\Game_Controller.cs" />
      <Compile Include="Assets\_Scripts\KillScript.cs" />
+     <Compile Include="Assets\_Scripts\Laser_Behavior.cs" />
      <Compile Include="Assets\_Scripts\PlayerBehavior.cs" />
+     <Compile Include="Assets\_Scripts\Power_Up_Behavior.cs" />
      <Compile Include="Assets\_Scripts\SpawnBehavior.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
