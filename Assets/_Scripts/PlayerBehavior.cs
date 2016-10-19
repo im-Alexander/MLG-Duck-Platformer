@@ -12,6 +12,7 @@ public class PlayerBehavior : MonoBehaviour
 	private bool _isGrounded;
 	private Transform firePos;
 	private Game_Controller controller;
+	private bool _isJumpable;
 
 	//public instance variables
 	[Header ("Player Mechanics")]
@@ -19,6 +20,8 @@ public class PlayerBehavior : MonoBehaviour
 	public float AirVelocity = 5f;
 	public float JumpForce = 100f;
 	public int HP = 5;
+	public Transform SightStart;
+	public Transform SightEnd;
 
 	[Header ("Camera")]
 	public Camera camera;
@@ -46,6 +49,8 @@ public class PlayerBehavior : MonoBehaviour
 
 		//To Update the interface when the game starts
 		controller.DecreaseHP(0);
+
+		this._isJumpable = false;
 	}
 	
 	// Update is called once per frame (physics)
@@ -80,14 +85,25 @@ public class PlayerBehavior : MonoBehaviour
 			//Check for keydown
 			if(Input.GetKeyDown(KeyCode.Z))
 			{
-				this._jump = 1f;
-				GetComponent<AudioSource>().PlayOneShot(JumpSound);
+				this._isJumpable = Physics2D.Linecast (this.SightStart.position, this.SightEnd.position, 1 << LayerMask.NameToLayer("Solid"));
+				if (this._isJumpable == true) 
+				{
+					this._jump = 1f;
+					GetComponent<AudioSource> ().PlayOneShot (JumpSound);
+				}
 			}
 			if(Input.GetKeyDown(KeyCode.Comma))
 			{
-				this._jump = 1f;
-				GetComponent<AudioSource>().PlayOneShot(JumpSound);
+				this._isJumpable = Physics2D.Linecast (this.SightStart.position, this.SightEnd.position, 1 << LayerMask.NameToLayer("Solid"));
+				if (this._isJumpable == true) 
+				{
+					this._jump = 1f;
+					GetComponent<AudioSource> ().PlayOneShot (JumpSound);
+				}
 			}
+
+			//For Debug
+			Debug.DrawLine(this.SightStart.position, this.SightEnd.position);
 
 			this._rigidbody.AddForce(new Vector2(this._move * this.Velocity, this._jump * this.JumpForce), ForceMode2D.Force);
 		}
