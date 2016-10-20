@@ -43,7 +43,7 @@ public class Enemy_Behavior : MonoBehaviour
 		}
 	}
 
-	void OnTriggerEnter2D(Collider2D other)
+	private void OnTriggerEnter2D(Collider2D other)
 	{
 		if (other.gameObject.name.Contains ("Laser"))
 		{ 
@@ -52,20 +52,28 @@ public class Enemy_Behavior : MonoBehaviour
 			HealthLoss ();
 		}
 	}
-
-	void OnCollisionStay2D(Collision2D other)
-	{
-		if (other.gameObject.CompareTag ("Platform")) 
-		{
-			this._isGrounded = true;
-		}
-	}
-
-	void OnTriggerExit2D(Collider2D other)
+		
+	private void OnTriggerExit2D(Collider2D other)
 	{
 		if (other.gameObject.CompareTag ("Platform")) 
 		{
 			this._isGrounded = false;
+		}
+	}
+
+	private void OnCollisionEnter2D(Collision2D other)
+	{
+		if (other.gameObject.CompareTag ("Enemy"))
+		{ 
+			this._flip ();
+		}
+	}
+
+	private void OnCollisionStay2D(Collision2D other)
+	{
+		if (other.gameObject.CompareTag ("Platform")) 
+		{
+			this._isGrounded = true;
 		}
 	}
 
