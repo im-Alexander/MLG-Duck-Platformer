@@ -20,8 +20,15 @@ public class Game_Controller : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
-		Health.text = "Health: 5/5";
-		DeathCounter.text = "Rekt Counter: 0";
+		//These check for current scene
+		Scene currentScene = SceneManager.GetActiveScene ();
+		string sceneName = currentScene.name;
+
+		if (sceneName == "MLG-Duck-Platformer") 
+		{
+			Health.text = "Health: 5/5";
+			DeathCounter.text = "Rekt Counter: 0";
+		}
 	}
 	
 	// Update is called once per frame
@@ -32,14 +39,18 @@ public class Game_Controller : MonoBehaviour
 
 	public void DecreaseHP (int Decrease)
 	{
-		hp -= Decrease;
-		Health.text = "HP: "+ hp +"/5";
-		if (hp <= 0) 
+		Scene currentScene = SceneManager.GetActiveScene ();
+		string sceneName = currentScene.name;
+		if (sceneName == "MLG-Duck-Platformer") 
 		{
-			hp = 5;
-			Health.text = "Health: "+ hp +"/5";
-			death += 1;
-			DeathCounter.text = "Rekt Counter: "+ death;
+			hp -= Decrease;
+			Health.text = "HP: " + hp + "/5";
+			if (hp <= 0) {
+				hp = 5;
+				Health.text = "Health: " + hp + "/5";
+				death += 1;
+				DeathCounter.text = "Rekt Counter: " + death;
+			}
 		}
 	}
 

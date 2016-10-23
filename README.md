@@ -1,5 +1,5 @@
 								MLG DUCK PLATFORMER READ ME / GDD
-								    		Version V1.5
+								    		Version V1.6
 										
 						All work copyrights 2016 by Harambe Interactive
 									    All rights reserved.
@@ -19,6 +19,7 @@ Version V1.2 - Added Sounds/Music, Static enemies, User interface, Health system
 Version V1.3 - Updated Enemy movement, and line casting
 Version V1.4 - Created Levels 2 and 3, Updated User Interface, and Created multiple menus
 Version V1.5 - Improved Jumping and movement
+Version V1.6 - Fixed Web GL Build
 
 	Game Overview:
 MLG DUCK PLATFORMER is a 2D platforming game where the player controls the duck and must reach the end of the level.
